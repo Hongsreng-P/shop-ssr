@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../includes/nav.ejs', {isAuthenticated : isAuthenticated, user : username}) %>
+
+    <main>
+        <h1>Cart</h1>
+        <% if (prods.length === 0) { %>
+            <p>No cart added</p>
+        <% } else { %>
+            <table>
+                <tr>
+                <% for (let key in prods[0].dataValues) { %>
+                    <% if (key === 'title'|| key === 'price') { %>
+                    <td><%= `${key.toUpperCase()}` %></td> 
+                    <% } %>
+                <% } %>
+                    <td>QUANTITY</td>
+                    <td></td>
+                </tr>
+
+                <% for (let product of prods) { %>
+                    <tr>
+                        <% for (let key in product.dataValues) { %>
+                            <% if (key === 'title' || key === 'price') { %>
+                                <td><%= `${product[key]}${key === 'price' ? '$' : ''}` %></td> 
+                            <% } %>
+                        <% } %>
+                        <td><%=product.cartItem.quantity%></td>
+                        <td>
+                            <form action = "/cart/delete-cart" method="POST"> 
+                                <input type="hidden" value = "<%= product.dataValues.id %>" name="prodId">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+            <form action="/create/order" method="POST">
+                <button type="submit">Order</button>
+            </form>
+        <% } %>
+    </main>
+</body>
+</html>

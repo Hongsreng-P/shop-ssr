@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="/css/main.css" rel="stylesheet">
+    <script src="/js/main.js" defer></script>
+</head>
+<body>
+    <%- include('../includes/nav.ejs', {isAuthenticated : isAuthenticated, user : username}) %>
+
+    <main>
+        <h1>My Product</h1>
+        <p>List of products</p>
+        <% if (prods.length === 0) { %>
+            <p>No product added</p>
+        <% } else { %>
+            <table>
+                <tr>
+                    <% for (let key in prods[0].dataValues) { %>
+                        <% if (key === 'title' || key === 'price') { %>
+                        <td><%= `${key.toUpperCase()}` %></td> 
+                        <% } %>
+                    <% } %>
+                </tr>
+
+                <% for (let product of prods) { %>
+                    <tr>
+                        <% for (let key in product.dataValues) { %>
+                            <% if (key === 'title' || key === 'price') { %>
+                            <td><%= `${product[key]}${key === 'price' ? '$' : ''}` %></td> 
+                            <% } %>
+                        <% } %>
+                        <td class="edit">
+                            <a href="/admin/edit-product/<%= product.id %>?edit=true">Edit</a>
+                        </td>
+                        <td class="delete">
+                            <input type="hidden" value = "<%=product.id%>" name="productId">
+                            <button type="button" class="delete-product">Delete</button>
+                        </td>
+                    </tr> 
+                <% } %>
+            </table>
+        <% } %>
+    </main>
+</body>
+</html>
